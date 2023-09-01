@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class HomeNavStackView : UIStackView {
     
@@ -31,6 +32,8 @@ class HomeNavStackView : UIStackView {
             addArrangedSubview(view)
         }
         
+        settingsButton.addTarget(self, action: #selector(handleSignOut), for: .touchUpInside)
+        
         distribution = .equalCentering
         isLayoutMarginsRelativeArrangement = true
         layoutMargins = .init(top: 0, left: 16, bottom: 0, right: 16)
@@ -39,5 +42,13 @@ class HomeNavStackView : UIStackView {
     
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func handleSignOut(){
+        do{
+            try Auth.auth().signOut()
+        }catch{
+            print("ss")
+        } 
     }
 }

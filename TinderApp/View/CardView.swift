@@ -20,8 +20,7 @@ class CardView : UIView {
     //MARK: - Properties
     
     private var viewModel : CardViewModel?
-    
-    
+
     private var imageView : UIImageView = {
         
        let iv = UIImageView()
@@ -174,9 +173,9 @@ class CardView : UIView {
             
             if shouldDissmissCard {
                 self.removeFromSuperview()
-//                let xTranslation = CGFloat(direction.rawValue) * 1000
-//                let offScreenTransform = self.transform.translatedBy(x: xTranslation, y: 0)
-//                self.transform = offScreenTransform
+                let xTranslation = CGFloat(direction.rawValue) * 1000
+                let offScreenTransform = self.transform.translatedBy(x: xTranslation, y: 0)
+                self.transform = offScreenTransform
             }else{
                 self.transform = .identity
             }

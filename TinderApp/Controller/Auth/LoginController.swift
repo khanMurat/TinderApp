@@ -35,7 +35,7 @@ class LoginController : UIViewController {
        
        let tf = CustomTextField(inputText: "Password")
         tf.addTarget(self, action: #selector(textFieldDidChange(_ :)), for: .editingChanged)
-        let lockImg = UIImage(systemName: "lock")
+        let lockImg = UIImage(systemName: "lock.open")
         let button = UIButton(type: .custom)
         button.setImage(lockImg, for: .normal)
         button.tintColor = .white
@@ -51,6 +51,7 @@ class LoginController : UIViewController {
        
         let button = AuthButton(title: "Log In",type: .system)
         button.isEnabled = false
+        button.addTarget(self, action: #selector(handleLoginUser), for: .touchUpInside)
         return button
     }()
     
@@ -75,6 +76,23 @@ class LoginController : UIViewController {
     }
     
     //MARK: - Actions
+    
+    @objc func handleLoginUser(){
+        
+        guard let email = emailTextField.text else{return}
+        guard let password = passwordTextField.text else{return}
+        
+        showLoader(true)
+        AuthService.loginUser(email: email, password: password) { result,error  in
+            if error != nil {
+                self.showMessage(withTitle: "Error", message: "\(error!.localizedDescription)")
+                self.showLoader(false)
+                return
+            }
+                self.showLoader(false)
+                self.dismiss(animated: true)
+        }
+    }
     
     @objc func textFieldDidChange(_ textField:UITextField) {
         

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class HomeController : UIViewController {
     
@@ -29,28 +30,45 @@ class HomeController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        checkIfUserLoggedIn()
         configureUI()
-        configureCards()
+        //configureCards()
         
+        Service.fetchUser(withUid: Auth.auth().currentUser!.uid) { user in
+            print(user.age)
+            print(user.name)
+        }
+        
+    }
+    
+    //MARK: - API
+    
+    func checkIfUserLoggedIn(){
+        if Auth.auth().currentUser == nil {
+            
+            DispatchQueue.main.async {
+                let controller = UINavigationController(rootViewController: LoginController())
+                controller.modalPresentationStyle = .fullScreen
+                self.present(controller, animated: true)
+            }
+        }
     }
     
     //MARK: - Helpers
-    
-    func configureCards(){
-        
-        let user1 = User(name: "Jane Doe", age: 22, images: [#imageLiteral(resourceName: "jane3") , #imageLiteral(resourceName: "lady4c")])
-        let user2 = User(name: "Megan", age: 21, images: [#imageLiteral(resourceName: "kelly2") , #imageLiteral(resourceName: "kelly1")])
-        
-        let cardView1 = CardView(viewModel: CardViewModel(user: user1))
-        let cardView2 = CardView(viewModel: CardViewModel(user: user2))
-        
-    
-        
-        deckView.addSubview(cardView1)
-        cardView1.fillSuperview()
-        deckView.addSubview(cardView2)
-        cardView2.fillSuperview()
-    }
+
+//    func configureCards(){
+//
+//        let user1 = User(name: "Jane Doe", age: 22, images: [#imageLiteral(resourceName: "jane3") , #imageLiteral(resourceName: "lady4c")])
+//        let user2 = User(name: "Megan", age: 21, images: [#imageLiteral(resourceName: "kelly2") , #imageLiteral(resourceName: "kelly1")])
+//
+//        let cardView1 = CardView(viewModel: CardViewModel(user: user1))
+//        let cardView2 = CardView(viewModel: CardViewModel(user: user2))
+//
+//        deckView.addSubview(cardView1)
+//        cardView1.fillSuperview()
+//        deckView.addSubview(cardView2)
+//        cardView2.fillSuperview()
+//    }
     
     func configureUI(){
         

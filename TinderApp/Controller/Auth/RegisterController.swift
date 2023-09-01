@@ -17,6 +17,8 @@ class RegisterController : UIViewController {
     
     var viewModel = RegisterViewModel()
     
+    private var profileImage : UIImage?
+    
     private lazy var imagePickerButton : UIButton = {
        
         let button = UIButton(type: .system)
@@ -62,6 +64,7 @@ class RegisterController : UIViewController {
     private lazy var registerButton : AuthButton = {
        
         let button = AuthButton(title: "Register",type: .system)
+        button.addTarget(self, action: #selector(handleRegisterUser), for: .touchUpInside)
         return button
     }()
     
@@ -83,6 +86,26 @@ class RegisterController : UIViewController {
     }
     
     //MARK: - Actions
+    
+    @objc func handleRegisterUser(){
+        guard let email = emailTextField.text else {return}
+        guard let passowrd = passwordTextField.text else {return}
+        guard let fullname = fullnameTextField.text else {return}
+        guard let profileImage = profileImage else {return}
+        
+        let credentials = AuthCredentials(email: email, password: passowrd, fullname: fullname, profileImage: profileImage)
+        
+        AuthService.registerUser(withCredentials: credentials) { error in
+            self.showLoader(true)
+            if error != nil {
+                self.showMessage(withTitle: "Error", message: "\(error!.localizedDescription)")
+                self.showLoader(false)
+            }else{
+                print("SUCCESS")
+                self.showLoader(false)
+            }
+        }
+    }
     
     @objc func textFieldDidChange(_ textField:UITextField){
         formValidation(textField: textField)
@@ -165,6 +188,7 @@ extension RegisterController:UIImagePickerControllerDelegate,UINavigationControl
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
          let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
+        profileImage = image
         imagePickerButton.setImage(image?.withRenderingMode(.alwaysOriginal), for: .normal)
         imagePickerButton.layer.borderColor = UIColor.white.cgColor
         imagePickerButton.layer.cornerRadius = 10
