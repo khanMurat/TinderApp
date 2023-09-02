@@ -31,20 +31,20 @@ class CardViewModel {
         
     }
     
-     func getNextPhoto(){
-        
-         if index < user.images.count - 1{
-             index += 1
-         }
-         self.userImage = user.images[index]
-    }
-    
-    func getPreviousPhoto(){
-        
-        if index > 0 {
-            
-            index -= 1
-        }
-        self.userImage = user.images[index]
-    }
+//     func getNextPhoto(){
+//
+//         if index < user.images.count - 1{
+//             index += 1
+//         }
+//         self.userImage = user.images[index]
+//    }
+//
+//    func getPreviousPhoto(){
+//
+//        if index > 0 {
+//
+//            index -= 1
+//        }
+//        self.userImage = user.images[index]
+//    }
 }

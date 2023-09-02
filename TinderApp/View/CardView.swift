@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import SDWebImage
 
 enum SwipeDirection : Int {
     
@@ -122,14 +122,14 @@ class CardView : UIView {
         
         let shouldShowNextPhoto = location > self.frame.width / 2
         
-        if shouldShowNextPhoto {
-            viewModel.getNextPhoto()
-           
-        }else{
-            viewModel.getPreviousPhoto()
-        }
+//        if shouldShowNextPhoto {
+//            viewModel.getNextPhoto()
+//           
+//        }else{
+//            viewModel.getPreviousPhoto()
+//        }
         
-        imageView.image = viewModel.userImage
+        //imageView.image = viewModel.userImage
     }
     
     //MARK: - Helpers
@@ -139,7 +139,7 @@ class CardView : UIView {
         
         guard let viewModel = viewModel else {return}
         
-        imageView.image = viewModel.user.images.first
+        imageView.sd_setImage(with: URL(string: viewModel.user.profileImageUrl.first ?? ""))
         infoLabel.attributedText = viewModel.userInfoText
         
     }

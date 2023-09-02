@@ -27,6 +27,33 @@ struct Service {
         
     }
     
+    static func fetchAllUser(completion:@escaping ([User])->Void){
+        
+        var users = Array<User>()
+     
+        COLLECTION_USERS.getDocuments { snapshots, error in
+            
+            if error == nil {
+                
+                snapshots?.documents.forEach({ document in
+                        
+                    let dictionary = document.data()
+                    let user = User(dictionary: dictionary)
+                    
+                    users.append(user)
+                    
+                    
+                    if users.count == snapshots?.documents.count {
+                        
+                        completion(users)
+                    }
+                })
+            }else{
+                print(error?.localizedDescription ?? "")
+            }
+        }
+    }
+    
     static func uploadImage(image:UIImage,completion: @escaping(String)->Void){
         
         guard let imageData = image.jpegData(compressionQuality: 0.75) else {return}

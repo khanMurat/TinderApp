@@ -12,7 +12,7 @@ class HomeController : UIViewController {
     
     
     //MARK: - Properties
-    
+    private var user : User?
     private let topStack = HomeNavStackView()
     private let bottomStack = BottomControlsStackView()
     
@@ -23,7 +23,7 @@ class HomeController : UIViewController {
         return view
     }()
     
-
+    private var users = [User]()
     
     //MARK: - Lifecycle
     
@@ -32,13 +32,8 @@ class HomeController : UIViewController {
         
         checkIfUserLoggedIn()
         configureUI()
-        //configureCards()
-        
-        Service.fetchUser(withUid: Auth.auth().currentUser!.uid) { user in
-            print(user.age)
-            print(user.name)
-        }
-        
+        fetchUsers()
+        fetchUser()
     }
     
     //MARK: - API
@@ -54,25 +49,47 @@ class HomeController : UIViewController {
         }
     }
     
+    func fetchUser(){
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        Service.fetchUser(withUid: uid) { user in
+            self.user = user
+        }
+    }
+    
+    func fetchUsers(){
+        Service.fetchAllUser { users in
+            DispatchQueue.main.async {
+                self.users = users
+                self.configureCards()
+            }
+        }
+    }
+    
     //MARK: - Helpers
 
-//    func configureCards(){
-//
-//        let user1 = User(name: "Jane Doe", age: 22, images: [#imageLiteral(resourceName: "jane3") , #imageLiteral(resourceName: "lady4c")])
-//        let user2 = User(name: "Megan", age: 21, images: [#imageLiteral(resourceName: "kelly2") , #imageLiteral(resourceName: "kelly1")])
-//
-//        let cardView1 = CardView(viewModel: CardViewModel(user: user1))
-//        let cardView2 = CardView(viewModel: CardViewModel(user: user2))
-//
-//        deckView.addSubview(cardView1)
-//        cardView1.fillSuperview()
-//        deckView.addSubview(cardView2)
-//        cardView2.fillSuperview()
-//    }
+    func configureCards(){
+        
+        var cardView : CardView?
+        
+        if !users.isEmpty{
+            users.forEach { user in
+                
+                cardView = CardView(viewModel: CardViewModel(user: user))
+                
+                guard cardView != nil else {return }
+                
+                deckView.addSubview(cardView!)
+                
+                cardView!.fillSuperview()
+            }
+        }
+    }
     
     func configureUI(){
         
         view.backgroundColor = .white
+        
+        topStack.delegate = self
         
         let stack = UIStackView(arrangedSubviews: [topStack,deckView,bottomStack])
         stack.axis = .vertical
@@ -86,4 +103,22 @@ class HomeController : UIViewController {
         stack.bringSubviewToFront(deckView)
   
     }
+}
+
+extension HomeController : HomeNavStackViewDelegate {
+  
+    func showSettings() {
+        
+        guard let user = self.user else {return}
+        let controller = SettingsViewController(user: user)
+        let nav = UINavigationController(rootViewController: controller)
+        nav.modalPresentationStyle = .fullScreen
+        present(nav, animated: true)
+    }
+    
+    func showMessages() {
+        print("Show message pressed")
+    }
+    
+    
 }

@@ -8,11 +8,17 @@
 import UIKit
 import FirebaseAuth
 
+protocol HomeNavStackViewDelegate : AnyObject {
+    
+    func showSettings()
+    func showMessages()
+}
+
 class HomeNavStackView : UIStackView {
     
     
     //MARK: - Properties
-    
+    weak var delegate : HomeNavStackViewDelegate?
     let settingsButton = UIButton(type: .system)
     let messageButton = UIButton(type: .system)
     let tinderIcon = UIImageView(image: #imageLiteral(resourceName: "app_icon"))
@@ -32,7 +38,8 @@ class HomeNavStackView : UIStackView {
             addArrangedSubview(view)
         }
         
-        settingsButton.addTarget(self, action: #selector(handleSignOut), for: .touchUpInside)
+        settingsButton.addTarget(self, action: #selector(handleShowSettings), for: .touchUpInside)
+        messageButton.addTarget(self, action: #selector(handleShowMessages), for: .touchUpInside)
         
         distribution = .equalCentering
         isLayoutMarginsRelativeArrangement = true
@@ -44,11 +51,12 @@ class HomeNavStackView : UIStackView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func handleSignOut(){
-        do{
-            try Auth.auth().signOut()
-        }catch{
-            print("ss")
-        } 
+    @objc func handleShowSettings(){
+        delegate?.showSettings()
     }
+    
+    @objc func handleShowMessages(){
+        delegate?.showMessages()
+    }
+    
 }

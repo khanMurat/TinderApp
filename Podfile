@@ -10,5 +10,4 @@ target 'TinderApp' do
 	pod 'FirebaseFirestore'
 	pod 'FirebaseStorage'
 	pod 'SDWebImage', '~> 5.0'
-	pod 'JGProgressHUD'
 end
