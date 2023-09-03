@@ -78,6 +78,8 @@ class HomeController : UIViewController {
                 
                 guard cardView != nil else {return }
                 
+                cardView?.delegate = self
+                
                 deckView.addSubview(cardView!)
                 
                 cardView!.fillSuperview()
@@ -105,12 +107,15 @@ class HomeController : UIViewController {
     }
 }
 
+//MARK: - HomeNavStackViewDelegate
+
 extension HomeController : HomeNavStackViewDelegate {
   
     func showSettings() {
         
         guard let user = self.user else {return}
         let controller = SettingsViewController(user: user)
+        controller.delegate = self
         let nav = UINavigationController(rootViewController: controller)
         nav.modalPresentationStyle = .fullScreen
         present(nav, animated: true)
@@ -119,6 +124,37 @@ extension HomeController : HomeNavStackViewDelegate {
     func showMessages() {
         print("Show message pressed")
     }
+}
+
+//MARK: - SettingsViewControllerDelegate
+
+extension HomeController : SettingsViewControllerDelegate{
+    func settingsControllerWantsToLogOut(_ controller: SettingsViewController) {
+        controller.dismiss(animated: true)
+        AuthService.logOut()
+        checkIfUserLoggedIn()
+    }
     
-    
+    func saveUserInfoLocally(viewController: SettingsViewController, user: User) {
+        
+        self.user = user
+        Service.saveUserData(user: user) { error in
+            if error != nil {
+                self.showMessages()
+            }
+        }
+        self.dismiss(animated: true)
+    }
+}
+
+//MARK: - CardViewDelegate
+
+extension HomeController : CardViewDelegate {
+    func cardView(_ view: CardView, wantsToShowProfile user: User) {
+        
+        let controller = ProfileViewController(user: user)
+        controller.modalPresentationStyle = .fullScreen
+        present(controller, animated: true)
+        
+    }
 }

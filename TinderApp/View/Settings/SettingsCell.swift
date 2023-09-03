@@ -8,8 +8,8 @@
 import UIKit
 
 protocol SettingsCellDelegate:AnyObject {
-    func updateUserInfo(_ cell : SettingsCell,wantsToUpdateUserWith value:String,forSection:SettingsSection)
-    func setSliderValue(_ cell : SettingsCell)
+    func updateUserInfo(_ cell : SettingsCell,wantsToUpdateUserWith value:String,for section:SettingsSection)
+    func setSliderValue(_ cell : SettingsCell,max maxValue : Float,min minValue : Float)
 }
 
 class SettingsCell : UITableViewCell {
@@ -21,6 +21,9 @@ class SettingsCell : UITableViewCell {
             configure()
         }
     }
+    
+    private var minValue : Float = 18
+    private var maxValue : Float = 60
     
     weak var delegate : SettingsCellDelegate?
     
@@ -37,7 +40,7 @@ class SettingsCell : UITableViewCell {
         return tf
     }()
     var sliderStack = UIStackView()
-    let minAgeLabel = UILabel()
+    var minAgeLabel = UILabel()
     let maxAgeLabel = UILabel()
     
     lazy var minAgeSlider = createAgeRangeSlider()
@@ -63,8 +66,7 @@ class SettingsCell : UITableViewCell {
         sliderStack = UIStackView(arrangedSubviews: [minStack,maxStack])
         sliderStack.axis = .vertical
         sliderStack.spacing = 16
-        
-        minAgeSlider.addTarget(self, action: #selector(handleAgeRangeChanged), for: .valueChanged)
+    
         
         addSubview(sliderStack)
         sliderStack.centerY(inView: self)
@@ -78,14 +80,24 @@ class SettingsCell : UITableViewCell {
     
     //MARK: - Actions
     
-    @objc func handleAgeRangeChanged(){
-        delegate?.setSliderValue(self)
+    @objc func handleAgeRangeChanged(sender:UISlider){
+       
+        if sender == minAgeSlider {
+            minValue = sender.value
+            minAgeLabel.text = viewModel.minAgePreferences(sender.value)
+            
+        }else{
+            maxValue = sender.value
+            maxAgeLabel.text = viewModel.maxAgePreferences(sender.value)
+        }
+        
+        delegate?.setSliderValue(self, max: maxValue, min: minValue)
     }
     
     @objc func handleUpdateUserInfo(sender:UITextField){
         
         guard let value = sender.text else {return}
-        delegate?.updateUserInfo(self, wantsToUpdateUserWith: value, forSection: viewModel.section)
+        delegate?.updateUserInfo(self, wantsToUpdateUserWith: value, for: viewModel.section)
 
     }
     
@@ -98,6 +110,12 @@ class SettingsCell : UITableViewCell {
         
         inputField.placeholder = viewModel.placeholderText
         inputField.text = viewModel.value
+        
+        minAgeLabel.text = viewModel.minAgePreferences(viewModel.minAgeLabel)
+        maxAgeLabel.text = viewModel.maxAgePreferences(viewModel.maxAgeLabel)
+        
+        minAgeSlider.setValue(viewModel.minAgeLabel, animated: true)
+        maxAgeSlider.setValue(viewModel.maxAgeLabel, animated: true)
     }
     
     func createAgeRangeSlider()->UISlider{
@@ -105,6 +123,7 @@ class SettingsCell : UITableViewCell {
     let slider = UISlider()
         slider.minimumValue = 18
         slider.maximumValue = 60
+        slider.addTarget(self, action: #selector(handleAgeRangeChanged), for: .valueChanged)
         return slider
 }
     

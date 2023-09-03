@@ -29,6 +29,21 @@ enum SettingsSection : Int,CaseIterable {
         }
     }
     
+//    var numberOfRowsInSection : Int {
+//        switch self {
+//        case .name:
+//            return 1
+//        case .profession:
+//            return 2
+//        case .age:           DENEME AMAÇLI !
+//            return 3
+//        case .bio:
+//            return 1
+//        case .ageRange:
+//            return 1
+//        }
+//    }
+    
 }
 
 struct SettingsViewModel {
@@ -47,6 +62,17 @@ struct SettingsViewModel {
     var shouldHideSlider : Bool {
         return section != .ageRange
     }
+    
+    var maxAgeLabel : Float {
+        
+        return Float(user.maxSeekingAge)
+    }
+    
+    var minAgeLabel : Float {
+        
+        return Float(user.minSeekingAge)
+    }
+
     
     init(user:User,section:SettingsSection){
         self.user = user
@@ -68,5 +94,15 @@ struct SettingsViewModel {
             break
         }
         
+    }
+    
+    func minAgePreferences(_ value : Float) -> String{
+        
+        return "Min : \(Int(value))"
+    }
+    
+    func maxAgePreferences(_ value : Float) -> String{
+        
+        return "Max : \(Int(value))"
     }
 }

@@ -14,12 +14,21 @@ enum SwipeDirection : Int {
     case right = 1
 }
 
+protocol CardViewDelegate : AnyObject {
+    func cardView(_ view : CardView , wantsToShowProfile user : User)
+}
 
 class CardView : UIView {
     
     //MARK: - Properties
     
-    private var viewModel : CardViewModel?
+    weak var delegate : CardViewDelegate?
+    
+    private var viewModel : CardViewModel
+    
+    private lazy var barStackView = SegmentedBarView(numberOfSegments: viewModel.imageURLs.count)
+    
+    private var selectedIndex = 0
 
     private var imageView : UIImageView = {
         
@@ -40,6 +49,7 @@ class CardView : UIView {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "like_circle").withRenderingMode(.alwaysOriginal
                                                                                     ), for: .normal)
+        button.addTarget(self, action: #selector(handleShowProfile), for: .touchUpInside)
         
         return button
     }()
@@ -80,8 +90,8 @@ class CardView : UIView {
         
         
         configureGestureRecognizer()
-
-   
+         
+         configureBarStackView()
     }
     
     override func layoutSubviews() {
@@ -96,9 +106,13 @@ class CardView : UIView {
     
     //MARK: - Actions
     
+    @objc func handleShowProfile(){
+        
+        delegate?.cardView(self, wantsToShowProfile: viewModel.user)
+    }
+    
     @objc func handlePanGesture(sender:UIPanGestureRecognizer){
         
-
         switch sender.state {
         case .began:
             superview?.subviews.forEach({
@@ -116,32 +130,34 @@ class CardView : UIView {
     
     @objc func handleChangePhoto(sender:UITapGestureRecognizer){
         
-        guard let viewModel = viewModel else {return}
-        
         let location = sender.location(in: nil).x
         
         let shouldShowNextPhoto = location > self.frame.width / 2
         
-//        if shouldShowNextPhoto {
-//            viewModel.getNextPhoto()
-//           
-//        }else{
-//            viewModel.getPreviousPhoto()
-//        }
+        if shouldShowNextPhoto {
+            viewModel.getNextPhoto()
+           
+        }else{
+            viewModel.getPreviousPhoto()
+        }
         
-        //imageView.image = viewModel.userImage
+        imageView.sd_setImage(with: viewModel.imageUrl)
+        barStackView.setHighligted(index: viewModel.index)
     }
     
     //MARK: - Helpers
     
     
     func configure(){
-        
-        guard let viewModel = viewModel else {return}
-        
-        imageView.sd_setImage(with: URL(string: viewModel.user.profileImageUrl.first ?? ""))
+    
+        imageView.sd_setImage(with: viewModel.imageUrl)
         infoLabel.attributedText = viewModel.userInfoText
         
+    }
+    
+    func configureBarStackView(){
+        addSubview(barStackView)
+        barStackView.anchor(top: topAnchor,left: leftAnchor,right: rightAnchor,paddingTop: 8,paddingLeft: 8,paddingRight: 8,height: 4)
     }
     
     func configureGestureRecognizer(){

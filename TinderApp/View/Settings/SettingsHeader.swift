@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 protocol SettingsHeaderDelegate : AnyObject {
     
@@ -19,16 +20,25 @@ class SettingsHeader : UIView {
     
     weak var delegate : SettingsHeaderDelegate?
     
+    private let user : User
+    
+    var buttons = [UIButton]()
+    
     //MARK: - Lifecycle
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(user:User) {
+        self.user = user
+        super.init(frame: .zero)
         
         backgroundColor = .systemGroupedBackground
         
         let button1 = createButton()
         let button2 = createButton()
         let button3 = createButton()
+        
+        buttons.append(button1)
+        buttons.append(button2)
+        buttons.append(button3)
         
         addSubview(button1)
         button1.anchor(top:topAnchor,left: leftAnchor,bottom: bottomAnchor,paddingTop: 16,paddingLeft: 16,paddingBottom: 16)
@@ -43,7 +53,8 @@ class SettingsHeader : UIView {
         
         stack.anchor(top: topAnchor,left: button1.rightAnchor,bottom: bottomAnchor,right: rightAnchor,paddingTop: 16,paddingLeft: 16,paddingBottom: 16,paddingRight: 16)
         
-    }
+        configure()
+  }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -69,6 +80,24 @@ class SettingsHeader : UIView {
         button.contentHorizontalAlignment = .fill
         button.contentVerticalAlignment = .fill
         return button
+    }
+    
+    func configure() {
+        
+        let imageURLs = user.profileImageUrls
+        
+        for (index,url) in imageURLs.enumerated() {
+            
+            if index < buttons.count {
+                        let button = buttons[index]
+                button.sd_setImage(with: URL(string: url), for: .normal, completed: { (image, error, cacheType, url) in
+                    if let image = image {
+                        button.setImage(image.withRenderingMode(.alwaysOriginal), for: .normal)
+                    }
+                })
+            }
+        }
+        
     }
     
 }

@@ -34,6 +34,11 @@
 		FB77A4332A98D5E700510A8D /* CardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB77A4322A98D5E700510A8D /* CardViewModel.swift */; };
 		FB77A4362A98F04B00510A8D /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB77A4352A98F04B00510A8D /* LoginController.swift */; };
 		FB77A4382A98F0A700510A8D /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB77A4372A98F0A700510A8D /* CustomTextField.swift */; };
+		FBB0EAE02AA4F5B600C1B844 /* SettingsFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB0EADF2AA4F5B600C1B844 /* SettingsFooter.swift */; };
+		FBB0EAE42AA5350700C1B844 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB0EAE32AA5350700C1B844 /* ProfileViewController.swift */; };
+		FBB0EAE62AA537CC00C1B844 /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB0EAE52AA537CC00C1B844 /* ProfileCell.swift */; };
+		FBB0EAE82AA5413F00C1B844 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB0EAE72AA5413F00C1B844 /* ProfileViewModel.swift */; };
+		FBB0EAEA2AA546F700C1B844 /* SegmentedBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB0EAE92AA546F700C1B844 /* SegmentedBarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +72,11 @@
 		FB77A4322A98D5E700510A8D /* CardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewModel.swift; sourceTree = "<group>"; };
 		FB77A4352A98F04B00510A8D /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		FB77A4372A98F0A700510A8D /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		FBB0EADF2AA4F5B600C1B844 /* SettingsFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFooter.swift; sourceTree = "<group>"; };
+		FBB0EAE32AA5350700C1B844 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		FBB0EAE52AA537CC00C1B844 /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
+		FBB0EAE72AA5413F00C1B844 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		FBB0EAE92AA546F700C1B844 /* SegmentedBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +165,7 @@
 				FB77A4342A98F02100510A8D /* Auth */,
 				FB66DA2F2A836C0800F8A801 /* HomeController.swift */,
 				FB08841E2AA36F8200CA012E /* SettingsViewController.swift */,
+				FBB0EAE32AA5350700C1B844 /* ProfileViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -165,6 +176,7 @@
 				FB77A4322A98D5E700510A8D /* CardViewModel.swift */,
 				FB0076FB2A9BFD0900B61C5E /* AuthViewModel.swift */,
 				FB0884242AA3A9DC00CA012E /* SettingsViewModel.swift */,
+				FBB0EAE72AA5413F00C1B844 /* ProfileViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -172,11 +184,12 @@
 		FB66DA2D2A836B9500F8A801 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				FBB0EADE2AA4F5A100C1B844 /* Settings */,
 				FB66DA3A2A836E8200F8A801 /* HomeNavStackView.swift */,
 				FB66DA3C2A83729400F8A801 /* BottomControlsStackView.swift */,
 				FB66DA3E2A83790B00F8A801 /* CardView.swift */,
-				FB0884202AA377B400CA012E /* SettingsHeader.swift */,
-				FB0884222AA3A95A00CA012E /* SettingsCell.swift */,
+				FBB0EAE52AA537CC00C1B844 /* ProfileCell.swift */,
+				FBB0EAE92AA546F700C1B844 /* SegmentedBarView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -196,6 +209,16 @@
 				FB0076F72A9BF6E500B61C5E /* RegisterController.swift */,
 			);
 			path = Auth;
+			sourceTree = "<group>";
+		};
+		FBB0EADE2AA4F5A100C1B844 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				FB0884202AA377B400CA012E /* SettingsHeader.swift */,
+				FB0884222AA3A95A00CA012E /* SettingsCell.swift */,
+				FBB0EADF2AA4F5B600C1B844 /* SettingsFooter.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		FF497FC45FEDF988C8E61A99 /* Frameworks */ = {
@@ -329,10 +352,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB77A4362A98F04B00510A8D /* LoginController.swift in Sources */,
+				FBB0EAEA2AA546F700C1B844 /* SegmentedBarView.swift in Sources */,
 				FB15E02B2AA2971200E30BE7 /* Constants.swift in Sources */,
 				FB0076F82A9BF6E500B61C5E /* RegisterController.swift in Sources */,
 				FB0076F62A9BF5F400B61C5E /* AuthButton.swift in Sources */,
 				FB77A4382A98F0A700510A8D /* CustomTextField.swift in Sources */,
+				FBB0EAE02AA4F5B600C1B844 /* SettingsFooter.swift in Sources */,
 				FB66DA3F2A83790B00F8A801 /* CardView.swift in Sources */,
 				FB0076FC2A9BFD0900B61C5E /* AuthViewModel.swift in Sources */,
 				FB66DA3D2A83729400F8A801 /* BottomControlsStackView.swift in Sources */,
@@ -341,12 +366,15 @@
 				FB15E0292AA2791900E30BE7 /* Service.swift in Sources */,
 				FB77A4312A98D4A100510A8D /* User.swift in Sources */,
 				FB66DA172A8364E000F8A801 /* SceneDelegate.swift in Sources */,
+				FBB0EAE82AA5413F00C1B844 /* ProfileViewModel.swift in Sources */,
 				FB66DA302A836C0800F8A801 /* HomeController.swift in Sources */,
+				FBB0EAE42AA5350700C1B844 /* ProfileViewController.swift in Sources */,
 				FB0884232AA3A95A00CA012E /* SettingsCell.swift in Sources */,
 				FB15E0272AA2791100E30BE7 /* AuthService.swift in Sources */,
 				FB66DA362A836E0B00F8A801 /* Extensions.swift in Sources */,
 				FB77A4332A98D5E700510A8D /* CardViewModel.swift in Sources */,
 				FB08841F2AA36F8200CA012E /* SettingsViewController.swift in Sources */,
+				FBB0EAE62AA537CC00C1B844 /* ProfileCell.swift in Sources */,
 				FB0884212AA377B400CA012E /* SettingsHeader.swift in Sources */,
 				FB0884252AA3A9DC00CA012E /* SettingsViewModel.swift in Sources */,
 			);

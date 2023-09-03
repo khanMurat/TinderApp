@@ -6,6 +6,13 @@
 //
 
 import UIKit
+import JGProgressHUD
+
+protocol SettingsViewControllerDelegate : AnyObject {
+    
+    func saveUserInfoLocally(viewController : SettingsViewController,user:User)
+    func settingsControllerWantsToLogOut(_ controller : SettingsViewController)
+}
 
 private let identifer = "SettingsCell"
 
@@ -14,10 +21,14 @@ class SettingsViewController : UITableViewController {
     
     //MARK: - Properties
     
-    let headerView = SettingsHeader()
+    weak var delegate : SettingsViewControllerDelegate?
     
     private var user : User
-
+    
+    lazy var headerView = SettingsHeader(user: user)
+    
+    let footerView = SettingsFooter()
+    
     let picker = UIImagePickerController()
     
     var selectedButton : UIButton?
@@ -47,11 +58,26 @@ class SettingsViewController : UITableViewController {
     }
     
     @objc func handleDone(){
+        view.endEditing(true)
+        print(user)
+        delegate?.saveUserInfoLocally(viewController: self, user: user)
         
-        print("Done pressed")
     }
     
-    
+    //MARK: - API
+
+    func uploadImage(image:UIImage){
+        let hud = JGProgressHUD(style: .dark)
+        hud.textLabel.text = "Saving Image"
+        hud.show(in: view)
+        
+        Service.uploadImage(image: image) { imageURL in
+            
+            self.user.profileImageUrls.append(imageURL)
+            
+            hud.dismiss(animated: true)
+        }
+    }
     
     //MARK: - Helpers
     
@@ -74,6 +100,10 @@ class SettingsViewController : UITableViewController {
         headerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 300)
 
         headerView.delegate = self
+        
+        tableView.tableFooterView = footerView
+        footerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 88)
+        footerView.delegate = self
     }
     
 }
@@ -87,7 +117,8 @@ extension SettingsViewController{
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        1
+        return 1
+        //return SettingsSection.allCases[section].numberOfRowsInSection
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -95,7 +126,7 @@ extension SettingsViewController{
         cell.delegate = self
         guard let section = SettingsSection(rawValue: indexPath.section) else {return cell}
         cell.viewModel = SettingsViewModel(user: user, section: section)
-        cell.contentView.isUserInteractionEnabled = false // bu kod olmadan cell elemanları ile etkilesime giremedim !
+        cell.contentView.isUserInteractionEnabled = false // bu kod olmadan cell elemanları ile etkilesime girilemiyor !
         return cell
         
     }
@@ -124,12 +155,18 @@ extension SettingsViewController{
 
 extension SettingsViewController : SettingsCellDelegate {
     
+    func setSliderValue(_ cell: SettingsCell, max maxValue: Float, min minValue: Float) {
+        
+        self.user.maxSeekingAge = Int(maxValue)
+        self.user.minSeekingAge = Int(minValue)
+        print(user)
+    }
+    
     func updateUserInfo(_ cell: SettingsCell,
                         wantsToUpdateUserWith value: String,
-                        forSection: SettingsSection) {
+                        for section: SettingsSection) {
         
-        switch forSection {
-            
+        switch section {
         case .name:
             user.name = value
         case .profession:
@@ -141,15 +178,7 @@ extension SettingsViewController : SettingsCellDelegate {
         case .ageRange:
             break
         }
-        
     }
-    
-    func setSliderValue(_ cell: SettingsCell) {
-        print("xxxx")
-    }
-    
-
-    
     
 }
 
@@ -162,19 +191,24 @@ extension SettingsViewController : SettingsHeaderDelegate {
         present(picker, animated: true)
         
     }
-      
 }
 
 extension SettingsViewController : UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
-        
-        selectedButton?.setImage(image?.withRenderingMode(.alwaysOriginal), for: .normal)
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {return}
+        uploadImage(image: image)
+        selectedButton?.setImage(image.withRenderingMode(.alwaysOriginal), for: .normal)
         selectedButton?.imageView?.adjustsImageSizeForAccessibilityContentSizeCategory = true
         self.dismiss(animated: true)
     }
 }
 
+extension SettingsViewController : SettingsFooterDelegate {
+    func handleLogOut() {
+        delegate?.settingsControllerWantsToLogOut(self)
+    }
+    
+}
 

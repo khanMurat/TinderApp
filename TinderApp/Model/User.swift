@@ -11,10 +11,9 @@ struct User {
     
     var name : String
     var age : Int
-    //var images : [UIImage]
     let email : String
     let uid : String
-    let profileImageUrl : [String]
+    var profileImageUrls : [String]
     var profession : String
     var minSeekingAge : Int
     var maxSeekingAge : Int
@@ -23,13 +22,12 @@ struct User {
     init(dictionary:[String:Any]) {
         name = dictionary["fullname"] as? String ?? ""
         age = dictionary["age"] as? Int ?? 18
-        //images = dictionary["imageURL"] as? [UIImage] ?? []
         email = dictionary["email"] as? String ?? ""
         uid = dictionary["uid"] as? String ?? ""
-        profileImageUrl = dictionary["imageURL"] as? [String] ?? []
+        profileImageUrls = dictionary["imageURL"] as? [String] ?? []
         profession = dictionary["profession"] as? String ?? ""
-        minSeekingAge = dictionary["minSeekingAge"] as? Int ?? 0
-        maxSeekingAge = dictionary["minSeekingAge"] as? Int ?? 0
+        minSeekingAge = dictionary["minSeekingAge"] as? Int ?? 18
+        maxSeekingAge = dictionary["minSeekingAge"] as? Int ?? 60
         bio = dictionary["bio"] as? String ?? ""
     }
     

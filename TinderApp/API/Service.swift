@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseStorage
+import FirebaseAuth
 
 struct Service {
     
@@ -52,6 +53,31 @@ struct Service {
                 print(error?.localizedDescription ?? "")
             }
         }
+    }
+    
+    static func saveUserData(user:User,completion:@escaping(Error?)->Void){
+        
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        
+        let data = ["uid":user.uid,
+                    "fullname":user.name,
+                    "imageURL":user.profileImageUrls,
+                    "profession":user.profession,
+                    "minSeekingAge":user.minSeekingAge,
+                    "maxSeekingAge":user.maxSeekingAge,
+                    "bio":user.bio,
+                    "email":user.email,
+                    "age":user.age] as [String : Any]
+        
+        COLLECTION_USERS.document(uid).setData(data, merge: true) { error in
+            
+            if error != nil {
+                
+                completion(error)
+            }
+            
+        }
+        
     }
     
     static func uploadImage(image:UIImage,completion: @escaping(String)->Void){

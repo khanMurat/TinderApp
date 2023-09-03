@@ -37,7 +37,7 @@ struct AuthService {
                     
                     let data : [String:Any] = ["email":withCredentials.email,
                                                   "fullname":withCredentials.fullname,
-                                                  "imageURL":imageURL,
+                                                  "imageURL":[imageURL],
                                                   "uid":uid,
                                                   "age":20]
                     
@@ -58,5 +58,11 @@ struct AuthService {
         
     }
     
-    
+    static func logOut(){
+        do{
+          try Auth.auth().signOut()
+        }catch{
+            print("Error when logout")
+        }
+    } 
 }

@@ -39,6 +39,10 @@ extension UIViewController {
     }
 }
 
+extension UIColor {
+    static let barDeselectedColor = UIColor(white: 0, alpha: 0.1)
+}
+
 extension UIButton {
     func attributedTitle(firstPart: String, secondPart: String) {
         let atts: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor(white: 1, alpha: 0.87), .font: UIFont.systemFont(ofSize: 16)]
